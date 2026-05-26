@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Área do Funcionário</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #000000, #c22727);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      color: #333;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    h2,
+    h3 {
+      margin-top: 0;
+      margin-bottom: 25px;
+      color: #1e3c72;
+    }
+
+    input,
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #1e3c72;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2a5298;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th,
+    td {
+      border: 1px solid #eee;
+      padding: 10px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+      color: #1e3c72;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .logout-button {
+      background-color: #dc3545;
+      margin-top: 20px;
+    }
+
+    .logout-button:hover {
+      background-color: #c82333;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="loginFuncionario" class="screen active">
+      <h2>Login do Funcionário</h2>
+      <input type="email" id="emailFuncionario" placeholder="E-mail do Funcionário">
+      <input type="password" id="senhaFuncionario" placeholder="Senha do Funcionário">
+      <button onclick="fazerLoginFuncionario()">Entrar</button>
+    </div>
+
+    <div id="areaDados" class="screen">
+      <h2>Cadastros de Alunos</h2>
+      <div id="listaCadastros">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>Data/Hora Cadastro</th>
+              <th>Mensalidade Paga</th>
+              <th>Último Login</th>
+            </tr>
+          </thead>
+          <tbody id="corpoTabelaCadastros">
+            </tbody>
+        </table>
+      </div>
+      <button class="logout-button" onclick="sairFuncionario()">Sair</button>
+    </div>
+  </div>
+
+  <script>
+    const EMAIL_FUNCIONARIO = "funcionario@empresa.com";
+    const SENHA_FUNCIONARIO = "senha123";
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const funcionarioLogado = localStorage.getItem('funcionarioLogado');
+      if (funcionarioLogado === 'true') {
+        mostrarTelaFuncionario('areaDados');
+        carregarCadastros();
+      } else {
+        mostrarTelaFuncionario('loginFuncionario');
+      }
+    });
+
+    function mostrarTelaFuncionario(id) {
+      document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+      });
+      document.getElementById(id).classList.add('active');
+    }
+
+    function fazerLoginFuncionario() {
+      const emailDigitado = document.getElementById('emailFuncionario').value;
+      const senhaDigitada = document.getElementById('senhaFuncionario').value;
+
+      if (emailDigitado === EMAIL_FUNCIONARIO && senhaDigitada === SENHA_FUNCIONARIO) {
+        alert("Login de funcionário bem-sucedido!");
+        localStorage.setItem('funcionarioLogado', 'true');
+        mostrarTelaFuncionario('areaDados');
+        carregarCadastros();
+      } else {
+        alert("E-mail ou senha do funcionário incorretos.");
+      }
+    }
+
+    function sairFuncionario() {
+      localStorage.removeItem('funcionarioLogado');
+      mostrarTelaFuncionario('loginFuncionario');
+      alert('Sessão de funcionário encerrada.');
+    }
+
+    function carregarCadastros() {
+      const usuarios = JSON.parse(localStorage.getItem('usuariosAcademia')) || [];
+      const corpoTabela = document.getElementById('corpoTabelaCadastros');
+      corpoTabela.innerHTML = '';
+
+      if (usuarios.length === 0) {
+        const row = corpoTabela.insertRow();
+        const cell = row.insertCell(0);
+        cell.colSpan = 5; // Mantenha 5 colunas para "Nome", "E-mail", "Data/Hora Cadastro", "Mensalidade Paga", "Último Login"
+        cell.textContent = "Nenhum cadastro encontrado.";
+        cell.style.textAlign = 'center';
+        cell.style.padding = '20px';
+      } else {
+        usuarios.forEach(usuario => {
+          const row = corpoTabela.insertRow();
+          row.insertCell(0).textContent = usuario.nome || 'Não informado';
+          row.insertCell(1).textContent = usuario.email;
+          row.insertCell(2).textContent = usuario.dataCadastro || 'Não informado';
+          row.insertCell(3).textContent = usuario.mensalidadePaga ? 'Sim' : 'Não';
+          row.insertCell(4).textContent = usuario.ultimoLogin || 'Já logou';
+        });
+      }
+    }
+  </script>
+</body>
+
+</html>

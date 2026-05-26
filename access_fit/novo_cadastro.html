@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Novo Cadastro - Smartforte</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #000, #d10e0e);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+    .cadastro-container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      width: 350px;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+    }
+    h2 { margin-bottom: 25px; color: #333; }
+    
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      color: #333 !important;
+      background-color: #fff !important; 
+      box-sizing: border-box;
+      display: block;
+    }
+    
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: none;
+      background-color: #d10e0e;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .password-container { position: relative; width: 100%; margin-bottom: 15px; }
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #666;
+      width: auto;
+      font-size: 12px;
+    }
+    a { display: block; margin-top: 10px; color: #1e3c72; text-decoration: none; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="cadastro-container">
+    <h2>Criar Nova Conta</h2>
+    <form action="actions/processa_cadastro.php" method="POST" onsubmit="return validarSenhas()" autocomplete="off">
+  
+      <input type="text" name="nome" placeholder="Seu Nome Completo" required>
+
+      <input type="email" name="email" placeholder="E-mail" required autocomplete="off">
+      <div class="password-container">
+        <input type="password" name="senha" id="senhaCadastro" placeholder="Senha" required>
+        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('senhaCadastro', this)">Mostrar</button>
+      </div>
+
+      <div class="password-container">
+        <input type="password" id="confirmaSenhaCadastro" placeholder="Confirmar Senha" required>
+        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('confirmaSenhaCadastro', this)">Mostrar</button>
+      </div>
+
+      <button type="submit">Cadastrar</button>
+      <a href="academia.php">Voltar para o Login</a>
+    </form>
+  </div>
+
+  <script>
+    function togglePasswordVisibility(id, button) {
+      const input = document.getElementById(id);
+      input.type = (input.type === 'password') ? 'text' : 'password';
+      button.textContent = (input.type === 'password') ? 'Mostrar' : 'Esconder';
+    }
+    
+    function validarSenhas() {
+      const senha = document.getElementById('senhaCadastro').value;
+      const confirma = document.getElementById('confirmaSenhaCadastro').value;
+      
+      if (senha !== confirma) {
+        alert('As senhas não coincidem!');
+        return false;
+      }
+      return true;
+    }
+  </script>
+</body>
+</html>
